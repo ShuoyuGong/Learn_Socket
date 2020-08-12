@@ -1,0 +1,23 @@
+优势：数据交互不需要请求
+0----------------------
+0. 开启node服务(index.js)
+    node 文件名.js
+1. 前台给后台发送信息
+  emit(key,value);
+   接收
+   on(key,(str)=>{
+     //处理接收字符串
+   })
+2. 后台给后钱前台发送信息
+  emit(key,value);
+  on(key,(str)=>{
+     //处理接收字符串
+   })
+
+1----------------------练习
+0.给在线所有人发送信息，除了自己
+    user.broadcast.emit('msg',str);
+1.下线通知
+    user.on('disconnect', () => {
+      user.broadcast.emit('msg', '有人下线了')
+    })

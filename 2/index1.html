@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -48,6 +48,86 @@
 
 <body>
   <div id="div"></div>
+</body>
+
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    var t = 0;
+    function f1() {
+      console.log('运行需要0.8秒');
+      t += 0.8;
+    }
+    function f2() {
+      console.log('运行需要0.7秒');
+      var error = true;
+      // console.log(t);
+      if (error == true) {
+        // (function () {//let底层给加的
+        // console.log(t);
+        let t = new Date();// 名字是let的底层自动给该的
+        console.log(t);
+        // let t = 123;
+        console.log('程序出错了，在时间' + t)
+        // })(); // let底层自动给加的
+      }
+      // console.log(t);
+      t += 0.7;
+      // console.log(t);
+    }
+    f1();
+    f2();
+    console.log('整个程序运行需要：' + t)
+
+
+
+  </script>
 </body>
 
 </html>

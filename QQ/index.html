@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .textNode {
+      width: 400px;
+      height: 300px;
+      border: 1px solid black;
+      position: absolute;
+      left: 50%;
+      top: -1px;
+      margin-left: -200px;
+      overflow: auto;
+    }
+
+    #textarea {
+      width: 400px;
+      height: 100px;
+      border: 1px solid black;
+      position: absolute;
+      left: 50%;
+      top: 300px;
+      margin-left: -200px;
+    }
+
+    #sendBtn {
+      width: 400px;
+      height: 50px;
+      border: 1px solid black;
+      position: absolute;
+      left: 50%;
+      top: 400px;
+      margin-left: -200px;
+    }
+
+    .userNode {
+      width: 100px;
+      height: 450px;
+      border: 1px solid black;
+      position: absolute;
+      left: calc(50% + 250px);
+      top: -1px;
+      margin-left: -50px;
+    }
+
+    #userName {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      background-color: black;
+      z-index: 5;
+    }
+
+    #userName p {
+      text-align: center;
+      font-size: large;
+      color: white;
+      margin-top: 30px;
+    }
+
+    #userName input {
+      width: 400px;
+      height: 100px;
+      position: absolute;
+      left: 50%;
+      top: 200px;
+      margin-left: -200px;
+      font-size: 50px;
+    }
+
+    #submitBtn {
+      width: 400px;
+      height: 100px;
+      position: absolute;
+      left: 50%;
+      top: 350px;
+      margin-left: -200px;
+      font-size: 50px;
+    }
+
+    ul {
+      text-indent: 10px;
+    }
+
+    .myself {
+      color: brown;
+    }
+  </style>
+  <script src="http://localhost:2183/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+  <div id="userName">
+    <p>请输入您的名字</p>
+    <input type="text" id="userInput">
+    <button id="submitBtn">确定</button>
+  </div>
+  <div class="textNode" id="textNode">
+    <ul id="ul"></ul>
+  </div>
+  <div class="userNode">
+    <ol id="ol"></ol>
+  </div>
+  <textarea id="textarea" cols="30" rows="10" style="resize: none;"></textarea>
+  <button id="sendBtn">发送</button>
+</body>
+<script>
+  // 名字输入完毕 上线
+  submitBtn.onclick = function () {
+    window.conn = io.connect('ws://localhost:2183');
+    userName.style.transform = 'translateY(-100%)';
+    conn.emit('name', userInput.value);
+    // 接收他人消息信息
+    conn.on('msg', (json) => {
+      ul.appendChild(createLi(json.userName, json.timer, json.msg));
+      textNode.scrollTop = textNode.scrollHeight - 300;
+    });
+
+    // 接收自己消息信息
+    conn.on('myMsg', (json) => {
+      ul.appendChild(createLi(json.userName, json.timer, json.msg, "myself"));
+      textNode.scrollTop = textNode.scrollHeight - 300;
+    });
+
+    // 接收登陆信息
+    conn.on('userLogin', (arrUserLogin) => {
+      ol.innerHTML = '';
+      for (var i = 0; i < arrUserLogin.length; i++) {
+        var oLi = document.createElement('li');
+        oLi.innerHTML = arrUserLogin[i];
+        ol.appendChild(oLi);
+      }
+      var oLi = document.createElement('li');
+      oLi.innerHTML = "<p>" + arrUserLogin[arrUserLogin.length - 1] + "登录了</p>";
+      ul.appendChild(oLi);
+    });
+
+    // 登陆之后获取之前的所有信息
+    conn.on('agoMsgs', (agoMsgs) => {
+      for (var i = 0; i < agoMsgs.length; i++) {
+        ul.appendChild(createLi(agoMsgs[i].userName, agoMsgs[i].timer, agoMsgs[i].msg));
+      }
+    });
+
+    // 下线通知
+    conn.on('userDisconnect', (userDisconnect) => {
+      for (var i = 0; i < ol.children.length; i++) {
+        if (ol.children[i].innerHTML == userDisconnect) {
+          ol.children[i].remove();
+          var oLi = document.createElement('li');
+          oLi.innerHTML = "<p>" + userDisconnect + "下线了</p>";
+          ul.appendChild(oLi);
+        }
+      }
+    });
+  };
+
+
+  sendBtn.onclick = function () {
+    conn.emit('msg', textarea.value);
+  }
+
+
+  // 插入li元素
+  function createLi(user, time, content, className = '') {
+    var oLi = document.createElement('Li');
+    oLi.className = className;
+    oLi.innerHTML = `<p>${user} ${time}</p>
+    <p>${content}</p>`;
+    return oLi;
+  }
+</script>
+
+</html>

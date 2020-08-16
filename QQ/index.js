@@ -60,16 +60,19 @@
 // connection.end()
 
 //express_demo.js 文件
-var express = require('express')
-var app = express()
+// var express = require('express')
+// var app = express()
 
-app.get('/index', function (req, res) {
-  res.send('Hello World')
-})
+// app.get('/index', function (req, res) {
+//   res.send('Hello World')
+// })
 
-var server = app.listen(8081, function () {
-  var host = server.address().address
-  var port = server.address().port
+// var server = app.listen(8081, function () {
+//   var host = server.address().address
+//   var port = server.address().port
 
-  console.log('应用实例，访问地址为 http://127.0.0.5', host, port)
-})
+//   console.log('应用实例，访问地址为 http://127.0.0.5', host, port)
+// })
+var server = require('./server')
+var router = require('./route')
+server.start(router.route)

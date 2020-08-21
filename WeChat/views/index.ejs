@@ -25,7 +25,15 @@
               <div class="card-header">
                 <h4>聊天登陆</h4>
               </div>
-              <div> <%= errors %></div>
+              <% if (errors.length) { %>
+              <div class="alert alert-error">
+                <%= errors %>
+              </div>
+              <% }else{%>
+              2
+              <% }%>
+
+              <!-- <div class="alert alert-error"><%= errors %></div> -->
               <div class="card-body">
                 <form method="POST" action="http://127.0.0.5:8888/do_login" class="needs-validation" novalidate="">
                   <div class="form-group">

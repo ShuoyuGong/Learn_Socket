@@ -59,9 +59,11 @@ app.use(flash())
 // set flash
 app.use(function (req, res, next) {
   res.locals.errors = req.flash('error')
-  res.locals.infos = req.flash('info')
+  res.locals.styles = req.flash('style')
+  res.locals.success = req.flash('success')
   next()
 })
+
 module.exports = app
 
 routes(app)

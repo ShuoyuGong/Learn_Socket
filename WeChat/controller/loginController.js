@@ -17,7 +17,8 @@ exports.do_login = (req, res) => {
       return
     }
     if (result.length == 0) {
-      req.flash('errors', 'database error!')
+      req.flash('style', 'alert alert-error')
+      req.flash('error', '用户名或密码错误')
       return res.redirect('/login')
     } else {
       var result = JSON.parse(JSON.stringify(result))
